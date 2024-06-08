@@ -1,7 +1,7 @@
 # experiments
 
 ## Proving CUDA is Turing complete
-GPUs are Turing complete. So is CUDAl, as a general GPU programming language. Let's simulate a Turing universal machine in CUDA:
+GPUs are Turing complete. So is CUDA, as a general GPU programming language. Let's simulate a Turing universal machine in CUDA:
 
 To compile `turing_machine.cu`:
 ```bash
