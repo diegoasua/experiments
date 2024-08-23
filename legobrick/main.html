@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotate 3D LEGO Brick with Pointer in Three.js</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script>
+        // Scene, Camera, Renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Variables for Rotation
+        let isRotating = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        // LEGO Brick Parameters
+        const brickColor = 0xff0000;  // Red color
+        const brickWidth = 3; // 2x4 LEGO brick width
+        const brickHeight = 1; // Height
+        const brickDepth = 6; // Depth
+
+        // Create a Group for Brick and Studs
+        const legoGroup = new THREE.Group();
+
+        // Main Brick
+        const brickGeometry = new THREE.BoxGeometry(brickWidth, brickHeight, brickDepth);
+        const brickMaterial = new THREE.MeshPhongMaterial({ color: brickColor });
+        const brick = new THREE.Mesh(brickGeometry, brickMaterial);
+        legoGroup.add(brick);
+
+        // LEGO Studs
+        const studRadius = 0.5;
+        const studHeight = 0.2;
+        const studGeometry = new THREE.CylinderGeometry(studRadius, studRadius, studHeight, 32);
+        const studMaterial = new THREE.MeshPhongMaterial({ color: brickColor });
+
+        for (let x = -0.75; x <= 0.75; x += 1.5) {
+            for (let z = -2.25; z <= 2.25; z += 1.5) {
+                const stud = new THREE.Mesh(studGeometry, studMaterial);
+                stud.position.set(x, brickHeight / 2 + studHeight / 2, z);
+                legoGroup.add(stud);
+            }
+        }
+
+        // Add the Group to the Scene
+        scene.add(legoGroup);
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
+
+        // Camera Position
+        camera.position.z = 10;
+
+        // Render Loop
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Mouse down event listener to start rotating
+        window.addEventListener('mousedown', (event) => {
+            isRotating = true;
+            previousMousePosition.x = event.clientX;
+            previousMousePosition.y = event.clientY;
+        });
+
+        // Mouse move event listener to apply rotation
+        window.addEventListener('mousemove', (event) => {
+            if (isRotating) {
+                const deltaX = event.clientX - previousMousePosition.x;
+                const deltaY = event.clientY - previousMousePosition.y;
+
+                // Rotate the brick group
+                legoGroup.rotation.y += deltaX * 0.01;
+                legoGroup.rotation.x += deltaY * 0.01;
+
+                previousMousePosition.x = event.clientX;
+                previousMousePosition.y = event.clientY;
+            }
+        });
+
+        // Mouse up event listener to stop rotating
+        window.addEventListener('mouseup', () => {
+            isRotating = false;
+        });
+
+        // Adjust for Window Resize
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+
+    </script>
+</body>
+</html>
