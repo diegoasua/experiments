@@ -50,7 +50,7 @@ def train_one_epoch(model, optimizer, scheduler, criterion, train_loader, device
         loss = criterion(output, target)
         loss.backward()
         optimizer.step()
-        scheduler.step()  # Removed the parameter here
+        scheduler.step()
         total_loss += loss.item()
     
     return total_loss / num_batches
@@ -60,7 +60,7 @@ def run_configuration(args):
     model = SimpleCNN().to(device)
     optimizer = optimizer_configs[opt_name](model.parameters(), lr, wd)
     scheduler = CosineAnnealingLR(optimizer, T_max=len(train_loader))
-    avg_loss = train_one_epoch(model, optimizer, scheduler, criterion, train_loader, device)  # Added device here
+    avg_loss = train_one_epoch(model, optimizer, scheduler, criterion, train_loader, device)
     return opt_name, lr, wd, avg_loss
 
 if __name__ == '__main__':
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)
 
     # Grid search parameters
-    learning_rates = np.logspace(-6, 1, 10)  # Changed from (-4, -1) to (-6, 1)
+    learning_rates = np.logspace(-6, 1, 10)
     weight_decays = np.logspace(-5, -2, 10)
 
     # Results storage
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
     # Create all configurations
     all_configs = [
-        (opt_name, lr, wd, device, train_loader, criterion)  # <-- Now has all 6 required values
+        (opt_name, lr, wd, device, train_loader, criterion)
         for opt_name in optimizer_configs.keys()
         for lr in learning_rates
         for wd in weight_decays

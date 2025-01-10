@@ -8,7 +8,7 @@ def loss_function(X):
     """
     Computes the loss: (1 - X^T * X)^2
     """
-    product = np.trace(X.T @ X)  # Equivalent to x^T * x for matrix
+    product = np.trace(X.T @ X)
     return (1 - product) ** 2
 
 def gradient(X):
@@ -85,8 +85,6 @@ plt.show()
 # Verify the result
 product = np.trace(final_X.T @ final_X)
 print("\nX^T * X =", product)  # Should be close to 1 for optimal solution
-
-# ... existing imports and loss_function, gradient, numerical_gradient ...
 
 def loss_function_with_l2(X, lambda_l2):
     """
@@ -170,8 +168,6 @@ def adamw_optimizer(learning_rate=0.01, n_iterations=100, weight_decay=0.01, bet
             print(f"AdamW Iteration {i+1}: Loss = {current_loss:.6f}")
     
     return X, loss_history
-
-# ... existing code ...
 
 # Compare optimizers with adjusted learning rates and regularization
 lr_sgd = 0.01
