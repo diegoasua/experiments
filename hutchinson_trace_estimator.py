@@ -40,7 +40,7 @@ def example():
         return A @ x
     
     # Estimate the trace
-    estimated_trace = hutchinson_trace_estimator(mv_product, n=2, num_samples=1000)
+    estimated_trace = hutchinson_trace_estimator(mv_product, n=len(A), num_samples=1000)
     
     print(f"True trace: {np.trace(A)}")
     print(f"Estimated trace: {estimated_trace}")
